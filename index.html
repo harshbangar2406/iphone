@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inertix Studio | Editor Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030014;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Enhanced Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #7c3aed, #2dd4bf);
+            border-radius: 20px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+            background-clip: content-box;
+        }
+        
+        /* Scroll Progress Bar Effect */
+        #scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+        #scroll-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #7c3aed, #2dd4bf, #7c3aed);
+            background-size: 200% 100%;
+            animation: gradient-shift 3s linear infinite;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.8), 0 0 5px rgba(45, 212, 191, 0.5);
+            transition: width 0.1s ease-out;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Liquid Glass Button Styles */
+        .liquid-glass-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50px;
+            color: #f8fafc;
+        }
+
+        .liquid-glass-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.02);
+            border-radius: 35px; /* Morphing effect */
+            filter: url('#liquid-ripple'); /* Apply SVG ripple */
+            box-shadow: 0 12px 48px 0 rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .liquid-glass-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: 0.8s;
+            pointer-events: none;
+        }
+
+        .liquid-glass-btn:hover::after {
+            left: 100%;
+        }
+
+        .animate-reveal {
+            animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Reveal on Scroll utility */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Masonry Support */
+        .masonry-grid {
+            columns: 1;
+            column-gap: 2rem;
+        }
+        @media (min-width: 768px) { .masonry-grid { columns: 2; } }
+        @media (min-width: 1280px) { .masonry-grid { columns: 3; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .shared-layout-expanding {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            border-radius: 3rem;
+        }
+
+        /* Utility for the dark sections */
+        .dark-bg {
+            background-color: #030014;
+            color: #f8fafc;
+        }
+
+        .glass {
+            background: rgba(15, 10, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "three": "https://esm.sh/three@0.170.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+    <div id="root"></div>
+
+    <!-- SVG Filters for Liquid Morphing/Ripples -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="liquid-ripple">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="1" result="warp" />
+          <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="15" in="SourceGraphic" in2="warp" />
+        </filter>
+      </defs>
+    </svg>
+</body>
+</html>
